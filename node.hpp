@@ -17,6 +17,10 @@ enum class Operation {
  */
 template <typename T>
 class Value {
+    // prevent non numeric vals
+    // TODO: complex valued nodes
+    static_assert(std::is_arithmetic<T>::value, "Not an arithmetic type");
+
 public:
     /**
      * @brief Empty construct a new Value object
@@ -52,8 +56,6 @@ public:
         this->val = rhs.val;
         return *this;
     }
-
-
 
 
 private:
