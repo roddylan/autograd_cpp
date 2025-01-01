@@ -9,11 +9,16 @@ enum class Operation {
     tanh, sigmoid, relu
 };
 
+template <typename T>
+struct backprop {
+    virtual const T &operator()();
+};
+
 
 /**
- * @brief 
+ * @brief Value object
  * 
- * @tparam T 
+ * @tparam T type of value
  */
 template <typename T>
 class Value {
@@ -57,14 +62,14 @@ public:
         return *this;
     }
 
+    // backprop 
+    virtual const T &backprop();
+
 
 private:
-    T val;
-    Operation op;
+    T val;          // underlying value
+    Operation op;   // operation used (use to calc gradient)
 };
-
-
-
 
 
 
