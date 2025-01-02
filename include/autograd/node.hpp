@@ -92,20 +92,20 @@ public:
         return temp;
     }
 
-    const Value<T> &operator+(Value<T> rhs) {
+    Value<T> operator+(Value<T> rhs) const {
         return Value<T>{this->val + rhs.val};
     }
 
-    const Value<T> &operator+(T rhs) {
+    Value<T> operator+(T rhs) const {
         return Value<T>{this->val + rhs};
     }
 
-    const Value<T> &operator-(Value<T> rhs) {
+    Value<T> operator-(Value<T> rhs) const {
         return Value<T>{this->val - rhs.val};
     }
 
-    const Value<T> &operator-(T rhs) {
-        return Value<T>{this->val - rhs};
+    Value<T> operator-(T rhs) const {
+        Value<T>{this->val - rhs};
     }
 
     friend std::ostream &operator<<(std::ostream& os, const Value<T>& v_obj) {
