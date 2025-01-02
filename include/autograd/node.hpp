@@ -2,8 +2,8 @@
 #define NODE_H_
 #include <type_traits>
 #include <memory>
-#include <vector>
-
+#include <iostream>
+#include <cmath>
 
 enum class Operation {
     // regular
@@ -21,9 +21,9 @@ struct BPF {
 /**
  * @brief Value object
  * 
- * @tparam T type of value (default float)
+ * @tparam T type of value (default double)
  */
-template <typename T = float>
+template <typename T = double>
 class Value {
     // prevent non numeric vals
     // TODO: complex valued nodes
@@ -56,7 +56,7 @@ public:
      * @return const Value<T>& 
      */
     const Value<T> &operator++() {
-        ++val;
+        val += 1;
         return *this;
     }
 
@@ -65,9 +65,9 @@ public:
      * 
      * @return Value<T> 
      */
-    Value<T> operator++(T) {
+    Value<T> operator++(int) {
         Value<T> temp{this->val};
-        ++val;
+        val += 1;
         return temp;
     }
 
@@ -77,7 +77,7 @@ public:
      * @return const Value<T>& 
      */
     const Value<T> &operator--() {
-        --val;
+        val -= 1;
         return *this;
     }
 
@@ -86,9 +86,9 @@ public:
      * 
      * @return Value<T> 
      */
-    Value<T> operator--(T) {
+    Value<T> operator--(int) {
         Value<T> temp{this->val};
-        --val;
+        val -= 1;
         return temp;
     }
 
@@ -108,14 +108,15 @@ public:
         return Value<T>{this->val - rhs};
     }
 
-    // const Value<T> &operator/()
+    friend std::ostream &operator<<(std::ostream& os, const Value<T>& v_obj) {
+        os << "<Value [ " << (std::trunc(100 * v_obj.val) / 100) << " ]>";
+        return os;
+    }
 
 
 private:
     T val;          // underlying value
 };
-
-
 
 
 #endif
