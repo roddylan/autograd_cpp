@@ -105,7 +105,7 @@ public:
     }
 
     Value<T> operator-(T rhs) const {
-        Value<T>{this->val - rhs};
+        return Value<T>{this->val - rhs};
     }
 
     friend std::ostream &operator<<(std::ostream& os, const Value<T>& v_obj) {
