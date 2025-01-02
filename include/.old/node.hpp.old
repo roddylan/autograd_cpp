@@ -1,6 +1,9 @@
 #ifndef NODE_H_
 #define NODE_H_
 #include <type_traits>
+#include <memory>
+#include <vector>
+
 
 enum class Operation {
     // regular
@@ -10,7 +13,7 @@ enum class Operation {
 };
 
 template <typename T>
-struct backprop {
+struct BPF {
     virtual const T &operator()();
 };
 
@@ -63,12 +66,14 @@ public:
     }
 
     // backprop 
-    virtual const T &backprop();
+    // virtual const T &backprop();
 
 
 private:
     T val;          // underlying value
     Operation op;   // operation used (use to calc gradient)
+    
+    std::vector<std::shared_ptr<Value<T>>> connections; // connected nodes
 };
 
 
