@@ -127,7 +127,7 @@ struct ValHash {
         static_assert(std::is_arithmetic<T>::value, "Not an arithmetic type");
 
         // return std::hash<T> obj.val;
-        return std::hash<T>(obj.val) + 0xFF;
+        return std::hash<T>(obj.val);
     }
 };
 
