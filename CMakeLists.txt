@@ -10,15 +10,23 @@ project(Autograd VERSION 1.0)
 add_executable(Autograd src/main.cpp)
 add_executable(test src/main.cpp)
 
-# xtensor
-find_package(xtensor REQUIRED)
-target_include_directories(Autograd PUBLIC ${xtensor_INCLUDE_DIRS})
-target_link_libraries(Autograd PUBLIC xtensor)
+# add dependencies (CPM)
+include(cmake/CPM.cmake)
 
-target_include_directories(test PUBLIC ${xtensor_INCLUDE_DIRS})
+CPMAddPackage(
+    NAME xtensor
+    GITHUB_REPOSITORY xtensor-stack/xtensor
+    GIT_TAG 0.25.0
+)
+
+CPMAddPackage(
+    NAME magic_enum
+    GITHUB_REPOSITORY Neargye/magic_enum
+    GIT_TAG v0.9.7
+)
+
+target_link_libraries(Autograd PUBLIC xtensor)
 target_link_libraries(test PUBLIC xtensor)
 
-# headers
-target_include_directories(Autograd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/autograd)
-target_include_directories(test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/autograd)
-
+target_link_libraries(Autograd PUBLIC magic_enum)
+target_link_libraries(test PUBLIC magic_enum)
