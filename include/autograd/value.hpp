@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <unordered_set>
+#include <magic_enum/magic_enum.hpp>
 
 enum class Operation {
     // empty
@@ -107,7 +108,7 @@ public:
     }
 
     friend std::ostream &operator<<(std::ostream& os, const Value<T>& v_obj) {
-        os << "<Value [ " << (std::trunc(100 * v_obj.val) / 100) << " ]>";
+        os << "<Value [ " << (std::trunc(100 * v_obj.val) / 100) << " | op=" << magic_enum::enum_name(v_obj.op) << " ]>";
         return os;
     }
     
