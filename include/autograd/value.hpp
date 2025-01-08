@@ -1,9 +1,11 @@
 #ifndef NODE_H_
 #define NODE_H_
+#include <functional>
 #include <type_traits>
 #include <memory>
 #include <iostream>
 #include <cmath>
+#include <unordered_set>
 
 enum class Operation {
     // regular
@@ -12,9 +14,10 @@ enum class Operation {
     tanh, sigmoid, relu
 };
 
+// template BPF 
 template <typename T>
 struct BPF {
-    virtual const T &operator()();
+    virtual const T &operator()() const;
 };
 
 
@@ -34,21 +37,21 @@ public:
      * @brief Empty construct a new Value object
      * 
      */
-    Value() : val{} {}
+    Value() : val{}, grad{} {}
     
     /**
      * @brief Value construct a new Value object
      * 
      * @param val 
      */
-    Value(T val) : val{val} {}
+    Value(T val) : val{val}, grad{} {}
     
     /**
      * @brief Copy construct a new Value object
      * 
      * @param val 
      */
-    Value(const Value<T> &rhs) : val{rhs.val} {}
+    Value(const Value<T> &rhs) : val{rhs.val}, grad{rhs.grad} {}
 
     /**
      * @brief prefix inc
@@ -112,11 +115,27 @@ public:
         os << "<Value [ " << (std::trunc(100 * v_obj.val) / 100) << " ]>";
         return os;
     }
-
-
+    
 private:
     T val;          // underlying value
+    T grad;         // gradient value
+    Operation op;   // operation
+
+    std::function<T()> backprop; // backprop functor
+
+    std::unordered_set<std::shared_ptr<Value<T>>> children; // ptrs to child nodes
+
+
 };
 
+template <typename T = double>
+struct ValHash {
+    int operator()(Value<T> obj) {
+        static_assert(std::is_arithmetic<T>::value, "Not an arithmetic type");
+
+        // return std::hash<T> obj.val;
+        return std::hash<T>(obj.val) + 0xFF;
+    }
+};
 
 #endif
