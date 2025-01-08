@@ -14,13 +14,6 @@ enum class Operation {
     tanh, sigmoid, relu
 };
 
-// template BPF 
-template <typename T>
-struct BPF {
-    virtual const T &operator()() const;
-};
-
-
 /**
  * @brief Value object
  * 
