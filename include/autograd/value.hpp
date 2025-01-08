@@ -8,6 +8,8 @@
 #include <unordered_set>
 
 enum class Operation {
+    // empty
+    none,
     // regular
     multiply, divide, add, sub, 
     // activation
@@ -30,7 +32,7 @@ public:
      * @brief Empty construct a new Value object
      * 
      */
-    Value() : val{}, grad{} {}
+    Value() : val{}, grad{}, op{}, backprop([] { return 0;}) {}
     
     /**
      * @brief Value construct a new Value object
