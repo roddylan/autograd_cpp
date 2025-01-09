@@ -55,7 +55,7 @@ public:
     : val{rhs.val}, grad{rhs.grad}, op{rhs.op}, backprop{rhs.backprop}, children{rhs.children} {}
 
 
-    Value<T> operator+(Value<T> &rhs) const {
+    Value<T> operator+(Value<T> &rhs) {
         Value<T> out{this->val + rhs.val};
         out.op = Operation::add;
         
@@ -67,11 +67,19 @@ public:
         return out;
     }
 
-    Value<T> operator-(Value<T> &rhs) const {
-        return Value<T>{this->val - rhs.val};
+    Value<T> operator-(Value<T> &rhs) {
+        Value<T> out{this->val - rhs.val};
+        out.op = Operation::sub;
+        
+        out.backprop = [this, &rhs]() {
+            this->grad -= out.grad;
+            rhs.grad -= out.grad;
+        };
+
+        return out;
     }
 
-    friend std::ostream &operator<<(std::ostream& os, const Value<T>& v_obj) {
+    friend std::ostream &operator<<(std::ostream &os, const Value<T> &v_obj) {
         os << "<Value [ " << (std::trunc(100 * v_obj.val) / 100) << " | op=" << magic_enum::enum_name(v_obj.op) << " ]>";
         return os;
     }
