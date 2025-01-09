@@ -55,20 +55,20 @@ public:
     : val{rhs.val}, grad{rhs.grad}, op{rhs.op}, backprop{rhs.backprop}, children{rhs.children} {}
 
 
-    Value<T> operator+(Value<T> rhs) const {
-        return Value<T>{this->val + rhs.val};
+    Value<T> operator+(Value<T> &rhs) const {
+        Value<T> out{this->val + rhs.val};
+        out.op = Operation::add;
+        
+        out.backprop = [this, &rhs]() {
+            this->grad += out.grad;
+            rhs.grad += out.grad;
+        };
+
+        return out;
     }
 
-    Value<T> operator+(T rhs) const {
-        return Value<T>{this->val + rhs};
-    }
-
-    Value<T> operator-(Value<T> rhs) const {
+    Value<T> operator-(Value<T> &rhs) const {
         return Value<T>{this->val - rhs.val};
-    }
-
-    Value<T> operator-(T rhs) const {
-        return Value<T>{this->val - rhs};
     }
 
     friend std::ostream &operator<<(std::ostream& os, const Value<T>& v_obj) {
