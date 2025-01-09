@@ -40,56 +40,20 @@ public:
      * 
      * @param val 
      */
-    Value(T val) : val{val}, grad{} {}
+    Value(
+        T val, T grad = 0, Operation op = Operation::none, 
+        std::function<T> backprop = [] { return 0; },
+        std::unordered_set<std::shared_ptr<Value<T>>> children = {}) 
+        : val{val}, grad{grad}, op{op}, backprop{backprop}, children{children} {}
     
     /**
      * @brief Copy construct a new Value object
      * 
      * @param val 
      */
-    Value(const Value<T> &rhs) : val{rhs.val}, grad{rhs.grad} {}
+    Value(const Value<T> &rhs) 
+    : val{rhs.val}, grad{rhs.grad}, op{rhs.op}, backprop{rhs.backprop}, children{rhs.children} {}
 
-    /**
-     * @brief prefix inc
-     * 
-     * @return const Value<T>& 
-     */
-    const Value<T> &operator++() {
-        val += 1;
-        return *this;
-    }
-
-    /**
-     * @brief postfix inc
-     * 
-     * @return Value<T> 
-     */
-    Value<T> operator++(int) {
-        Value<T> temp{this->val};
-        val += 1;
-        return temp;
-    }
-
-    /**
-     * @brief prefix dec
-     * 
-     * @return const Value<T>& 
-     */
-    const Value<T> &operator--() {
-        val -= 1;
-        return *this;
-    }
-
-    /**
-     * @brief postfix dec
-     * 
-     * @return Value<T> 
-     */
-    Value<T> operator--(int) {
-        Value<T> temp{this->val};
-        val -= 1;
-        return temp;
-    }
 
     Value<T> operator+(Value<T> rhs) const {
         return Value<T>{this->val + rhs.val};
